@@ -83,24 +83,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s1);
 	return (str);
 }
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*mem;
-	size_t	total;
-	size_t	i;
-
-	if (size != 0 && nmemb > (size_t)-1 / size)
-		return (NULL);
-	i = 0;
-	total = nmemb * size;
-	mem = malloc(total);
-	if (!mem)
-		return (NULL);
-	while (i < total)
-	{
-		*(unsigned char *)(mem + i) = 0;
-		i++;
-	}
-	return ((void *)mem);
-}

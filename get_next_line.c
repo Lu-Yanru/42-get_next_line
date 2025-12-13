@@ -27,13 +27,7 @@ static char	*get_rest(char *stash)
 		free(stash);
 		return (NULL);
 	}
-	rest = malloc(((ft_strlen(stash) - i) + 1) * sizeof(char));
-	if (!rest)
-		return (NULL);
-	i++;
-	while (stash[i])
-		rest[j++] = stash[i++];
-	rest[j] = '\0';
+	rest = ft_strdup(ft_strchr(stash, '\n') + 1);
 	free(stash);
 	return (rest);
 }
@@ -69,7 +63,7 @@ static char	*read_buf(int fd, char *stash)
 
 	bytes_rd = 1;
 	if (!stash)
-		stash = ft_calloc(1, sizeof(char));
+		stash = ft_strdup("");
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
 		return (NULL);
@@ -96,7 +90,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = read_buf(fd, stash);
 	if (!stash)

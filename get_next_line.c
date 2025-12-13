@@ -15,19 +15,15 @@
 static char	*get_rest(char *stash)
 {
 	char	*rest;
-	size_t	i;
-	size_t	j;
+	char	*line;
 
-	i = 0;
-	j = 0;
-	while (stash[i] != '\n' && stash[i] != '\0')
-		i++;
-	if (stash[i] == '\0')
+	line = ft_strchr(stash, '\n');
+	if (!line || *(line + 1) == '\0')
 	{
 		free(stash);
 		return (NULL);
 	}
-	rest = ft_strdup(ft_strchr(stash, '\n') + 1);
+	rest = ft_strdup(line + 1);
 	free(stash);
 	return (rest);
 }
@@ -44,10 +40,12 @@ static char	*fill_line(char *stash)
 	len = 0;
 	while (stash[len] != '\n' && stash[len] != '\0')
 		len++;
-	line = malloc((len + 2) * sizeof(char));
+	if (stash[len] == '\n')
+		len++;
+	line = malloc((len + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
-	while (i <= len)
+	while (i < len)
 	{
 		line[i] = stash[i];
 		i++;
@@ -66,11 +64,14 @@ static char	*read_buf(int fd, char *stash)
 		stash = ft_strdup("");
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
+	{
+		free(stash);
 		return (NULL);
+	}
 	while (bytes_rd > 0)
 	{
 		bytes_rd = read(fd, buf, BUFFER_SIZE);
-		if (bytes_rd < 0 || (bytes_rd == 0 && stash == NULL))
+		if (bytes_rd < 0 || (bytes_rd == 0 && !stash))
 		{
 			free(buf);
 			free(stash);
@@ -78,6 +79,11 @@ static char	*read_buf(int fd, char *stash)
 		}
 		buf[bytes_rd] = '\0';
 		stash = ft_strjoin(stash, buf);
+		if (!stash)
+		{
+			free(buf);
+			return (NULL);
+		}
 		if (ft_strchr(stash, '\n') != NULL)
 			break ;
 	}
@@ -96,6 +102,12 @@ char	*get_next_line(int fd)
 	if (!stash)
 		return (NULL);
 	line = fill_line(stash);
+	if (!line)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	stash = get_rest(stash);
 	return (line);
 }

@@ -15,15 +15,15 @@
 static char	*get_rest(char *stash)
 {
 	char	*rest;
-	char	*line;
+	char	*line_end;
 
-	line = ft_strchr(stash, '\n');
-	if (!line || *(line + 1) == '\0')
+	line_end = ft_strchr(stash, '\n');
+	if (!line_end || *(line_end + 1) == '\0')
 	{
 		free(stash);
 		return (NULL);
 	}
-	rest = ft_strdup(line + 1);
+	rest = ft_strdup(line_end + 1);
 	free(stash);
 	return (rest);
 }
@@ -54,14 +54,22 @@ static char	*fill_line(char *stash)
 	return (line);
 }
 
+static char	*read_join(int fd, char *stash, char *buf, int *bytes_rd)
+{
+	*bytes_rd = read(fd, buf, BUFFER_SIZE);
+	if (*bytes_rd <= 0)
+		return (stash);
+	buf[*bytes_rd] = '\0';
+	stash = ft_strjoin(stash, buf);
+	return (stash);
+}
+
 static char	*read_buf(int fd, char *stash)
 {
 	char	*buf;
 	int		bytes_rd;
 
 	bytes_rd = 1;
-	if (!stash)
-		stash = ft_strdup("");
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
 	{
@@ -70,18 +78,11 @@ static char	*read_buf(int fd, char *stash)
 	}
 	while (bytes_rd > 0)
 	{
-		bytes_rd = read(fd, buf, BUFFER_SIZE);
-		if (bytes_rd < 0 || (bytes_rd == 0 && !stash))
+		stash = read_join(fd, stash, buf, &bytes_rd);
+		if (!stash || bytes_rd < 0)
 		{
 			free(buf);
 			free(stash);
-			return (NULL);
-		}
-		buf[bytes_rd] = '\0';
-		stash = ft_strjoin(stash, buf);
-		if (!stash)
-		{
-			free(buf);
 			return (NULL);
 		}
 		if (ft_strchr(stash, '\n') != NULL)
@@ -98,6 +99,8 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	if (!stash)
+		stash = ft_strdup("");
 	stash = read_buf(fd, stash);
 	if (!stash)
 		return (NULL);

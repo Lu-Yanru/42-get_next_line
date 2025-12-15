@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yanlu <yanlu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/09 17:53:46 by yanlu             #+#    #+#             */
-/*   Updated: 2025/12/15 15:36:04 by yanlu            ###   ########.fr       */
+/*   Created: 2025/12/09 17:50:06 by yanlu             #+#    #+#             */
+/*   Updated: 2025/12/15 17:32:13 by yanlu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-#include "get_next_line.h"
+# include <stdlib.h>
+# include <unistd.h>
 
-int	main(void)
-{
-	int		fd;
-	char	*line;
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
 
-	fd = open("test3.txt", O_RDONLY);
-	while ((line = get_next_line(fd)))
-	{
-		printf("%s", line);
-		free(line);
-	}
-	printf("%s", line);
-	free(line);
-	close(fd);
-}
+# ifndef FD_MAX
+#  define FD_MAX 1024
+# endif
+
+char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s);
+char	*ft_strjoin(char *s1, char *s2);
+
+#endif

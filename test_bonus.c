@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   test_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yanlu <yanlu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 17:53:46 by yanlu             #+#    #+#             */
-/*   Updated: 2025/12/15 15:36:04 by yanlu            ###   ########.fr       */
+/*   Updated: 2025/12/15 19:25:16 by yanlu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,43 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-int	main(void)
+int	main(int argc, char *argv[])
 {
-	int		fd;
+	int		fd[argc - 1];
 	char	*line;
+	int		i;
 
-	fd = open("test3.txt", O_RDONLY);
-	while ((line = get_next_line(fd)))
+	i = 0;
+	if (argc < 2)
 	{
+		printf("Please provide a file name.");
+		return (0);
+	}
+	while (i + 1 < argc)
+	{
+		fd[i] = open(argv[i + 1], O_RDONLY);
+		i++;
+	}
+	i = 0;
+	while (i + 1 < argc)
+	{
+		printf("==== Printing file %s ======\n", argv[i + 1]);
+		while ((line = get_next_line(fd[i])))
+		{
+			printf("%s", line);
+			free(line);
+		}
 		printf("%s", line);
 		free(line);
+		printf("==== Finished printing file %s ======\n", argv[i + 1]);
+		i++;
 	}
-	printf("%s", line);
-	free(line);
-	close(fd);
+	i = 0;
+	while (i + 1 < argc)
+	{
+		close(fd[i]);
+		i++;
+	}
 }

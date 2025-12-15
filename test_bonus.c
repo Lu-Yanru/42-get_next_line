@@ -28,6 +28,7 @@ int	main(int argc, char *argv[])
 		printf("Please provide a file name.");
 		return (0);
 	}
+	printf("%i\n", OPEN_MAX);
 	while (i + 1 < argc)
 	{
 		fd[i] = open(argv[i + 1], O_RDONLY);
@@ -36,7 +37,7 @@ int	main(int argc, char *argv[])
 	i = 0;
 	while (i + 1 < argc)
 	{
-		printf("==== Printing file %s ======\n", argv[i + 1]);
+		printf("==== Printing file %s, fd: %i ======\n", argv[i + 1], fd[i]);
 		while ((line = get_next_line(fd[i])))
 		{
 			printf("%s", line);

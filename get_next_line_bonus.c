@@ -94,10 +94,10 @@ static char	*read_buf(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[FD_MAX];
+	static char	*stash[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || fd >= FD_MAX || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!stash[fd])
 		stash[fd] = ft_strdup("");

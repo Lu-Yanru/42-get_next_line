@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "get_next_line.h"
 
@@ -21,7 +22,7 @@ int	main(void)
 	int		fd;
 	char	*line;
 
-	fd = open("test4.txt", O_RDONLY);
+	fd = open("test3.txt", O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
 		printf("%s", line);

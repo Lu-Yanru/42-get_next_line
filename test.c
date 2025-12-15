@@ -20,7 +20,7 @@ int	main(void)
 	int		fd;
 	char	*line;
 
-	fd = open("test3.txt", O_RDONLY);
+	fd = open("test4.txt", O_RDONLY);
 	while ((line = get_next_line(fd)))
 	{
 		printf("%s", line);
